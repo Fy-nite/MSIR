@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MSIR</RootNamespace>
+    <TargetFramework>net10.0</TargetFramework>
+    <!--<PublishAot>true</PublishAot>-->
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="libs\**" />
+    <EmbeddedResource Remove="libs\**" />
+    <None Remove="libs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libs\ObjectIR.Core\ObjectIR.Core.csproj" />
+    <ProjectReference Include="..\TestingApp\TestingApp.csproj" />
+  </ItemGroup>
+
+</Project>

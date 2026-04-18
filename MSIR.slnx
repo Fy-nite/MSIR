@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="libs/ObjectIR.Core/ObjectIR.Core.csproj" />
+  <Project Path="MSIR/MSIR.vbproj" />
+  <Project Path="TestingApp/TestingApp.csproj" />
+</Solution>
