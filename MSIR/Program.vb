@@ -218,9 +218,12 @@ Module Program
                         localName = "2"
                     ElseIf Instructionz.OpCode.Code = Code.Stloc_3 Then
                         localName = "3"
-                        'ElseIf Instructionz.Operand IsNot Nothing Then
-                        '    Dim v = TryCast(Instructionz.Operand, Mono.Cecil.)
-                        '    If v IsNot Nothing Then localName = v.Index.ToString()
+                    ElseIf Instructionz.Operand IsNot Nothing Then
+                        Dim v = TryCast(Instructionz.Operand, Mono.Cecil.VariableDefinition)
+                        If v IsNot Nothing Then
+                            ' Prefer an explicit name if present, otherwise use the index
+                            localName = If(String.IsNullOrEmpty(v.Name), v.Index.ToString(), v.Name)
+                        End If
                     End If
                     If Not String.IsNullOrEmpty(localName) Then
                         instructions.Stloc(localName)
@@ -235,9 +238,11 @@ Module Program
                         localName = "2"
                     ElseIf Instructionz.OpCode.Code = Code.Ldloc_3 Then
                         localName = "3"
-                        'ElseIf Instructionz.Operand IsNot Nothing Then
-                        '    Dim v = TryCast(Instructionz.Operand, Mono.Cecil.VariableDefinition)
-                        '    If v IsNot Nothing Then localName = v.Index.ToString()
+                    ElseIf Instructionz.Operand IsNot Nothing Then
+                        Dim v = TryCast(Instructionz.Operand, Mono.Cecil.VariableDefinition)
+                        If v IsNot Nothing Then
+                            localName = If(String.IsNullOrEmpty(v.Name), v.Index.ToString(), v.Name)
+                        End If
                     End If
                     If Not String.IsNullOrEmpty(localName) Then
                         instructions.Ldloc(localName)
