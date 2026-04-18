@@ -1,0 +1,3 @@
+[submodule "libs/ObjectIR.Core"]
+	path = libs/ObjectIR.Core
+	url = https://github.com/fy-nite/ObjectIR.Core
