@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="libs/ObjectIR.Core/ObjectIR.Core.csproj" />
   <Project Path="MSIR/MSIR.vbproj" />
-  <Project Path="TestingApp/TestingApp.csproj" />
+  <Project Path="MSIRTest/MSIRTest.csproj" Id="29823e9d-7957-49db-90de-00a4f9083037" />
 </Solution>

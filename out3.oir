@@ -1,0 +1,31 @@
+module TestingApp version 1.0.0
+// Program class
+class Program {
+    method Main(args: System.String[]) -> void {
+        local loc0: System.String
+        local loc1: System.Boolean
+
+        ldstr "meow"
+        stloc 0
+        ldloc 0
+        ldstr "meow"
+        ceq
+        stloc 1
+        ldloc 1
+        if (stack) {
+            ldstr "woof"
+            stloc 0
+        }
+        ldstr "Hello, World! "
+        ldloc 0
+        call System.String.Concat(System.string, System.string) -> System.string
+        call System.Console.WriteLine(System.string) -> void
+        ret
+    }
+
+    method .ctor() -> void {
+        ldarg 0
+        call System.Object..ctor() -> void
+        ret
+    }
+}

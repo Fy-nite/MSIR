@@ -6,6 +6,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <!--<PublishAot>true</PublishAot>-->
     <InvariantGlobalization>true</InvariantGlobalization>
+	  <!--build as single file-->
+	  <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\libs\ObjectIR.Core\ObjectIR.Core.csproj" />
-    <ProjectReference Include="..\TestingApp\TestingApp.csproj" />
   </ItemGroup>
 
 </Project>

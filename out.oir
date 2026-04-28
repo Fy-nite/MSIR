@@ -1,0 +1,36 @@
+module MSIRTest version 1.0.0
+
+
+
+class Program {
+    static method Main(args: System.String[]) -> System.Void {
+        local loc0: System.String
+        local loc1: System.Boolean
+
+        ldstr Hello, World!
+        call IO.Println(System.Object) -> System.Void
+        ldstr $>
+        call IO.Readln(System.Object) -> System.String
+        stloc loc0
+        ldloc loc0
+        ldnull
+        cgt
+        stloc loc1
+        ldloc loc1
+        if (loc0 > null) {
+            ldloc loc0
+            call IO.Println(System.Object) -> System.Void
+        }
+        ret
+    }
+
+    method .ctor() -> System.Void {
+        ldarg this
+        call System.Object..ctor() -> System.Void
+        ret
+    }
+}
+
+
+
+
