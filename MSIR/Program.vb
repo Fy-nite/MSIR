@@ -131,7 +131,7 @@ Module Program
                                 paramTypes.Add(GetTypeName(p.ParameterType))
                             Next
 
-                            Dim astMethodRef = New ObjectIR.Core.AST.MethodReference(declType, MethodRef.Name, retType, paramTypes)
+                            Dim astMethodRef = TranslateStdMethod(declType, MethodRef.Name, retType, paramTypes)
 
                             If Instructionz.OpCode.Code = Mono.Cecil.Cil.Code.Callvirt Then
                                 instructions.Callvirt(astMethodRef)
@@ -422,20 +422,35 @@ Module Program
                             If thenHasTrailingBr AndAlso endIndexz > thenEndIndex Then
                                 ' emit if with else
                                 Dim cond = BacktrackCondition(mdef, i)
-                                instructions.If(cond, Sub(thenBuilder)
-                                                          ParseInstructions(mdef, thenBuilder, i + 1, thenEndIndex - 1)
-                                                      End Sub,
-                                                      Sub(elseBuilder)
-                                                          ParseInstructions(mdef, elseBuilder, thenEndIndex, endIndexz)
-                                                      End Sub)
+                                If cond = "stack" Then
+                                    instructions.IfStack(Sub(thenBuilder)
+                                                             ParseInstructions(mdef, thenBuilder, i + 1, thenEndIndex - 1)
+                                                         End Sub,
+                                                         Sub(elseBuilder)
+                                                             ParseInstructions(mdef, elseBuilder, thenEndIndex, endIndexz)
+                                                         End Sub)
+                                Else
+                                    instructions.If(cond, Sub(thenBuilder)
+                                                              ParseInstructions(mdef, thenBuilder, i + 1, thenEndIndex - 1)
+                                                          End Sub,
+                                                          Sub(elseBuilder)
+                                                              ParseInstructions(mdef, elseBuilder, thenEndIndex, endIndexz)
+                                                          End Sub)
+                                End If
                                 ' Skip to endIndex
                                 i = endIndexz - 1
                             Else
                                 ' No else: simple if then-only
                                 Dim cond = BacktrackCondition(mdef, i)
-                                instructions.If(cond, Sub(thenBuilder)
-                                                          ParseInstructions(mdef, thenBuilder, i + 1, targetIndex)
-                                                      End Sub)
+                                If cond = "stack" Then
+                                    instructions.IfStack(Sub(thenBuilder)
+                                                             ParseInstructions(mdef, thenBuilder, i + 1, targetIndex)
+                                                         End Sub)
+                                Else
+                                    instructions.If(cond, Sub(thenBuilder)
+                                                              ParseInstructions(mdef, thenBuilder, i + 1, targetIndex)
+                                                          End Sub)
+                                End If
                                 i = targetIndex - 1
                             End If
                         Else
@@ -509,6 +524,24 @@ Module Program
         End While
 
     End Sub
+
+    Private Function TranslateStdMethod(declType As String, name As String, retType As String, paramTypes As List(Of ObjectIR.Core.AST.TypeRef)) As ObjectIR.Core.AST.MethodReference
+        Dim d As String
+        Dim n As String
+        Select Case declType
+            Case "System.Console"
+                d = "IO"
+            Case Else
+                d = declType
+        End Select
+        Select Case name
+            Case "WriteLine"
+                n = "Println"
+            Case Else
+                n = name
+        End Select
+        Return New ObjectIR.Core.AST.MethodReference(d, n, retType, paramTypes)
+    End Function
 
     Private Function GetArgFriendlyName(mdef As Mono.Cecil.MethodDefinition, index As Integer) As String
         If Not mdef.IsStatic AndAlso index = 0 Then Return "this"
@@ -652,14 +685,7 @@ Module Program
 
         ' If it's a comparison, get its operands
         If prev.OpCode.Code = Code.Ceq Or prev.OpCode.Code = Code.Cgt Or prev.OpCode.Code = Code.Cgt_Un Or prev.OpCode.Code = Code.Clt Or prev.OpCode.Code = Code.Clt_Un Then
-            If currentIndex >= 3 Then
-                Dim op2 = instrs(currentIndex - 2)
-                Dim op1 = instrs(currentIndex - 3)
-                Dim opStr = "=="
-                If prev.OpCode.Code = Code.Cgt Or prev.OpCode.Code = Code.Cgt_Un Then opStr = ">"
-                If prev.OpCode.Code = Code.Clt Or prev.OpCode.Code = Code.Clt_Un Then opStr = "<"
-                Return GetInstructionDescription(mdef, op1) & " " & opStr & " " & GetInstructionDescription(mdef, op2)
-            End If
+            Return "stack"
         End If
 
         Return GetInstructionDescription(mdef, prev)
