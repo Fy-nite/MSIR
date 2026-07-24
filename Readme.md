@@ -39,36 +39,6 @@ MSIR/
     └── IO.cs                  # Stub classes for transpiler output
 ```
 
-## ObjectIR.Core
-
-The core library is also available as a NuGet package:
-
-```bash
-dotnet add package ObjectIR.Core
-```
-
-Build modules programmatically:
-
-```csharp
-var module = new IRBuilder("MyApp")
-    .Class("Animal")
-        .Field("name", TypeReference.String)
-            .Access(AccessModifier.Private)
-            .EndField()
-        .Method("Speak", TypeReference.String)
-            .Virtual()
-            .Body()
-                .Ldarg(0)
-                .Ldfld(new FieldReference(
-                    TypeReference.FromName("Animal"),
-                    "name",
-                    TypeReference.String))
-                .Ret()
-            .EndBody()
-        .EndMethod()
-    .EndClass()
-    .Build();
-```
 
 ### Why ObjectIR?
 
@@ -80,20 +50,6 @@ Most compiler toolkits target low-level bytecode (too far from OO semantics) or 
 # Transpile an assembly to ObjectIR text format
 dotnet run --project MSIR -- path/to/assembly.dll > output.oir
 ```
-
-## Documentation
-
-Full docs for ObjectIR.Core live in `libs/ObjectIR.Core/docs/`:
-
-| Page | Description |
-|------|-------------|
-| [Getting Started](libs/ObjectIR.Core/docs/getting-started.md) | Install and build your first module |
-| [Architecture](libs/ObjectIR.Core/docs/architecture.md) | Design and namespace layout |
-| [IR Model](libs/ObjectIR.Core/docs/ir-model.md) | Data model reference |
-| [Builder API](libs/ObjectIR.Core/docs/builder-api.md) | Fluent builder walkthrough |
-| [Serialization](libs/ObjectIR.Core/docs/serialization.md) | Load and save modules |
-| [Composition](libs/ObjectIR.Core/docs/composition.md) | Merging modules |
-| [FOB Format](libs/ObjectIR.Core/docs/fob-format.md) | Compact binary format spec |
 
 ## License
 
